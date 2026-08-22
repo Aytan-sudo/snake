@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="prairie" data-apparence="moderne" data-main="droite">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Snake</title>
+<meta name="description" content="Le Snake classique et ses variantes : sans murs, obstacles, portails et sprint 90 secondes. Jouable au doigt, hors ligne.">
+<meta name="theme-color" content="#2d6a3f" id="couleur-barre">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="stylesheet" href="css/themes.css">
+<link rel="stylesheet" href="css/plateau.css">
+<link rel="stylesheet" href="css/interface.css">
+<script>
+    // Restaurer l'apparence avant le premier rendu évite un éclair vert quand
+    // le joueur a choisi un thème sombre.
+    try {
+        const enveloppe = JSON.parse(localStorage.getItem('snake.preferences') || '{}');
+        const prefs = enveloppe && enveloppe.schema === 1 ? enveloppe.donnees || {} : {};
+        if (/^(prairie|ocean|bonbon|ardoise|neon|contraste)$/.test(prefs.theme || '')) {
+            document.documentElement.dataset.theme = prefs.theme;
+        }
+        if (/^(moderne|pixel|organique)$/.test(prefs.apparence || '')) {
+            document.documentElement.dataset.apparence = prefs.apparence;
+        }
+        if (/^(gauche|droite)$/.test(prefs.main || '')) {
+            document.documentElement.dataset.main = prefs.main;
+        }
+    } catch { /* les valeurs par défaut suffisent */ }
+</script>
+</head>
+<body>
+
+<div class="app">
+    <header class="topbar">
+        <div class="titre">
+            <span class="mini-serpent" aria-hidden="true">●●●</span>
+            <h1>Snake</h1>
+        </div>
+        <div class="topbar-actions">
+            <button type="button" class="icon-button" id="bouton-aide" aria-label="Règles du jeu">?</button>
+            <button type="button" class="icon-button" id="bouton-theme" aria-label="Changer de thème">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <circle cx="12" cy="12" r="8.5"/><path d="M12 3.5a8.5 8.5 0 0 0 0 17Z" class="plein"/>
+                </svg>
+            </button>
+            <button type="button" class="icon-button" id="bouton-reglages" aria-label="Réglages">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" class="engrenage">
+                    <path d="M12 8.3a3.7 3.7 0 1 0 0 7.4 3.7 3.7 0 0 0 0-7.4Zm8.6 3.7c0 .5-.05 1-.14 1.48l2 1.55-2 3.47-2.38-.97a8.5 8.5 0 0 1-2.56 1.48l-.36 2.92h-4l-.38-2.92a8.5 8.5 0 0 1-2.55-1.48l-2.38.97-2-3.47 2-1.55a8.5 8.5 0 0 1 0-2.96l-2-1.55 2-3.47 2.38.97a8.5 8.5 0 0 1 2.55-1.48l.38-2.92h4l.36 2.92a8.5 8.5 0 0 1 2.56 1.48l2.38-.97 2 3.47-2 1.55c.09.48.14.98.14 1.48Z"/>
+                </svg>
+            </button>
+        </div>
+    </header>
+
+    <section class="hud" aria-label="Résultat de la partie">
+        <div class="hud-boite variante-boite">
+            <span>Mode</span>
+            <strong id="hud-variante">Classique</strong>
+        </div>
+        <div class="hud-boite">
+            <span>Score</span>
+            <strong id="hud-score">0</strong>
+        </div>
+        <div class="hud-boite">
+            <span>Record</span>
+            <strong id="hud-record">0</strong>
+        </div>
+        <div class="hud-boite" id="boite-temps" hidden>
+            <span>Temps</span>
+            <strong id="hud-temps">1:30</strong>
+        </div>
+    </section>
+
+    <main class="zone-jeu">
+        <div class="cadre-plateau" id="cadre-plateau">
+            <canvas id="plateau" width="600" height="600" role="img" aria-label="Plateau de Snake, partie prête"></canvas>
+            <div class="voile-jeu" id="voile-jeu">
+                <div class="voile-carte">
+                    <p class="voile-surtitre" id="voile-surtitre">Classique</p>
+                    <h2 id="voile-titre">À vous de jouer</h2>
+                    <p id="voile-detail">Touchez une flèche ou glissez sur le plateau.</p>
+                    <button type="button" class="button button-primary" id="voile-action" hidden>Reprendre</button>
+                </div>
+            </div>
+        </div>
+        <p class="annonce" id="annonce" role="status" aria-live="polite"></p>
+    </main>
+
+    <footer class="commandes">
+        <div class="dpad" id="dpad" aria-label="Croix directionnelle">
+            <button type="button" class="fleche haut" data-direction="haut" aria-label="Aller en haut"><span aria-hidden="true">↑</span></button>
+            <button type="button" class="fleche gauche" data-direction="gauche" aria-label="Aller à gauche"><span aria-hidden="true">←</span></button>
+            <button type="button" class="pause" id="bouton-pause" aria-label="Mettre en pause"><span aria-hidden="true">Ⅱ</span></button>
+            <button type="button" class="fleche droite" data-direction="droite" aria-label="Aller à droite"><span aria-hidden="true">→</span></button>
+            <button type="button" class="fleche bas" data-direction="bas" aria-label="Aller en bas"><span aria-hidden="true">↓</span></button>
+        </div>
+        <button type="button" class="button nouvelle" id="bouton-nouvelle">Nouvelle partie</button>
+    </footer>
+</div>
+
+<dialog id="dialogue-fin" class="dialog">
+    <p class="dialog-surtitre" id="fin-variante"></p>
+    <h2 id="fin-titre">Partie terminée</h2>
+    <p class="grand-score"><strong id="fin-score">0</strong><span>fruits</span></p>
+    <p id="fin-detail" class="dialog-detail"></p>
+    <p id="fin-record" class="nouveau-record" hidden>Nouveau record !</p>
+    <div class="dialog-actions">
+        <button type="button" class="button" id="fin-options">Options</button>
+        <button type="button" class="button button-primary" id="fin-rejouer">Rejouer</button>
+    </div>
+</dialog>
+
+<dialog id="dialogue-reglages" class="dialog grande">
+    <div class="dialog-entete">
+        <div><p class="dialog-surtitre">Personnaliser</p><h2>Options</h2></div>
+        <button type="button" class="icon-button" data-fermer aria-label="Fermer les options">×</button>
+    </div>
+
+    <h3>Variante</h3>
+    <div class="cartes-choix" id="choix-variante" role="group" aria-label="Variante de Snake"></div>
+    <p class="explication" id="explication-variante"></p>
+
+    <h3>Vitesse</h3>
+    <div class="segments" id="choix-vitesse" role="group" aria-label="Vitesse du serpent"></div>
+    <p class="explication" id="explication-vitesse"></p>
+
+    <h3>Apparence du serpent</h3>
+    <div class="cartes-apparence" id="choix-apparence" role="group" aria-label="Apparence du serpent"></div>
+
+    <h3>Couleurs</h3>
+    <div class="pastilles" id="choix-theme" role="group" aria-label="Thème de couleurs"></div>
+
+    <h3>Commandes</h3>
+    <div class="segments" id="choix-main" role="group" aria-label="Côté des commandes en paysage"></div>
+    <p class="explication">En paysage, la croix se place du côté de votre main principale.</p>
+
+    <h3>Confort</h3>
+    <label class="option">
+        <input type="checkbox" id="option-gestes">
+        <span><strong>Gestes sur le plateau</strong><small>Glissez dans la direction voulue, en plus des flèches.</small></span>
+    </label>
+    <label class="option">
+        <input type="checkbox" id="option-sons">
+        <span><strong>Sons discrets</strong><small>Une note courte pour les fruits, portails et records.</small></span>
+    </label>
+    <label class="option">
+        <input type="checkbox" id="option-vibration">
+        <span><strong>Vibration</strong><small>Un retour tactile distinct pour manger et perdre.</small></span>
+    </label>
+
+    <h3>Résultats de cette configuration</h3>
+    <dl class="stats" id="stats"></dl>
+    <h3>Dernières parties</h3>
+    <ol class="historique" id="historique"></ol>
+
+    <p class="changement" id="avis-changement" hidden>Le nouveau mode ou la nouvelle vitesse sera appliqué en lançant une nouvelle partie.</p>
+    <p class="version" id="version">Snake 1.0.0</p>
+    <div class="dialog-actions">
+        <button type="button" class="button button-danger" id="effacer-resultats">Effacer les résultats</button>
+        <button type="button" class="button button-primary" data-fermer>Jouer</button>
+    </div>
+</dialog>
+
+<dialog id="dialogue-aide" class="dialog grande">
+    <div class="dialog-entete">
+        <div><p class="dialog-surtitre">Comment jouer</p><h2>Règles</h2></div>
+        <button type="button" class="icon-button" data-fermer aria-label="Fermer les règles">×</button>
+    </div>
+    <p>Guidez le serpent vers les fruits. Chaque fruit allonge son corps et accélère progressivement la partie. Toucher un mur, un rocher ou votre propre corps termine la partie.</p>
+
+    <h3>Commandes</h3>
+    <p>Utilisez la croix directionnelle ou glissez sur le plateau. Deux virages rapides sont mémorisés. Le demi-tour direct est interdit, car il ferait entrer la tête dans le corps.</p>
+
+    <h3>Variantes</h3>
+    <dl class="aide-variantes">
+        <div><dt>Classique</dt><dd>Murs mortels, comme dans le jeu d’origine.</dd></div>
+        <div><dt>Sans murs</dt><dd>Les côtés opposés sont reliés.</dd></div>
+        <div><dt>Obstacles</dt><dd>Dix rochers au départ, puis un nouveau tous les quatre fruits.</dd></div>
+        <div><dt>Portails</dt><dd>Deux portes reliées, déplacées après trois passages.</dd></div>
+        <div><dt>Sprint 90 s</dt><dd>Règles classiques avec un compte à rebours.</dd></div>
+    </dl>
+
+    <h3>Clavier</h3>
+    <p><kbd>Flèches</kbd>, <kbd>ZQSD</kbd> ou <kbd>WASD</kbd> pour tourner · <kbd>Espace</kbd> ou <kbd>P</kbd> pour la pause · <kbd>R</kbd> pour recommencer · <kbd>T</kbd> pour changer de thème.</p>
+    <div class="dialog-actions"><button type="button" class="button button-primary" data-fermer>Jouer</button></div>
+</dialog>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

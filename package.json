@@ -1,0 +1,12 @@
+{
+  "name": "snake",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Snake mobile avec cinq variantes, trois vitesses et reprise de partie.",
+  "type": "module",
+  "scripts": {
+    "test": "node tests/test-moteur.mjs && node tests/test-partie.mjs && node tests/test-stockage.mjs && node tests/test-page.mjs",
+    "check": "node --check js/app.js && node --check js/config.js && node --check js/entree.js && node --check js/hasard.js && node --check js/moteur.js && node --check js/partie.js && node --check js/rendu.js && node --check js/son.js && node --check js/stockage.js && node --check js/themes.js && node --check js/ui.js && node --check js/variantes.js",
+    "serve": "python3 -m http.server 8765"
+  }
+}
