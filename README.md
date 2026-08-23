@@ -7,6 +7,14 @@ directs et une partie qui se remet en pause quand l'application disparaît.
 Le jeu est une page statique, sans dépendance et sans compilation. Il fonctionne
 hors ligne après la première visite et ne transmet aucune donnée.
 
+## Version 1.0.1
+
+- flèches tactiles agrandies sur téléphone, y compris les petits écrans ;
+- un glissement tourne dès que le seuil est franchi, sans attendre le relâchement ;
+- plusieurs virages peuvent être enchaînés au cours d'un même geste ;
+- le double-tap, l'appui prolongé, la sélection et le glisser-déposer sont
+  neutralisés dans la zone de jeu sur iPhone.
+
 ## Les cinq modes
 
 | Mode | Règle particulière |

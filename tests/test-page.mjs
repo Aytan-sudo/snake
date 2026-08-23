@@ -53,6 +53,12 @@ check('les six thèmes ont une palette', THEMES.length === 6 && THEMES.slice(1).
 check('les apparences ont des règles visuelles', ['moderne', 'pixel', 'organique'].every(id => styles.includes(`data-apparence="${id}"`) || lire('js/rendu.js').includes(`'${id}'`)));
 
 check('le plateau et la croix captent les gestes', /\.cadre-plateau\s*\{[^}]*touch-action:\s*none/s.test(styles) && /\.dpad\s*\{[^}]*touch-action:\s*none/s.test(styles));
+check('les flèches mobiles ne descendent jamais sous 58 px', styles.includes('--dpad-cell: clamp(58px'));
+check('le geste tourne pendant le mouvement', lire('js/entree.js').includes("canvas.addEventListener('pointermove', gesteBouge"));
+check('les interactions parasites iOS sont neutralisées',
+    page.includes('maximum-scale=1, user-scalable=no')
+    && styles.includes('-webkit-touch-callout: none')
+    && lire('js/entree.js').includes("'contextmenu', 'selectstart', 'dragstart', 'dblclick'"));
 check('le paysage possède une mise en page dédiée', styles.includes('@media (orientation: landscape)') && styles.includes('data-main="gauche"'));
 check('les encoches du téléphone sont respectées', styles.includes('safe-area-inset-top') && styles.includes('safe-area-inset-bottom'));
 check('les mouvements réduits sont respectés', styles.includes('prefers-reduced-motion'));

@@ -2,7 +2,7 @@
 [hidden] { display: none !important; }
 
 html, body { min-height: 100%; }
-html { background: var(--fond); }
+html { background: var(--fond); touch-action: manipulation; }
 
 body {
     margin: 0;
@@ -13,11 +13,20 @@ body {
     font-family: "Avenir Next", "Segoe UI", system-ui, -apple-system, sans-serif;
     -webkit-tap-highlight-color: transparent;
     -webkit-text-size-adjust: 100%;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
     overscroll-behavior: none;
 }
 
 button, input { font: inherit; }
-button { -webkit-tap-highlight-color: transparent; }
+button {
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: manipulation;
+}
 
 .app {
     display: grid;
@@ -91,13 +100,17 @@ button { -webkit-tap-highlight-color: transparent; }
     flex-direction: column;
     align-items: center;
     gap: 6px;
+    touch-action: none;
 }
 
 .dpad {
+    --dpad-cell: clamp(58px, 17vw, 72px);
     display: grid;
-    grid-template: repeat(3, 50px) / repeat(3, 50px);
+    grid-template: repeat(3, var(--dpad-cell)) / repeat(3, var(--dpad-cell));
     gap: 3px;
     touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
     user-select: none;
 }
 
@@ -109,9 +122,10 @@ button { -webkit-tap-highlight-color: transparent; }
     background: var(--panneau);
     color: var(--texte);
     cursor: pointer;
+    touch-action: none;
 }
 
-.fleche span { font-size: 1.65rem; line-height: 1; transform: translateY(-1px); }
+.fleche span { font-size: clamp(2rem, 8vw, 2.55rem); font-weight: 800; line-height: 1; transform: translateY(-1px); }
 .fleche.haut { grid-area: 1 / 2; border-radius: 14px 14px 7px 7px; }
 .fleche.gauche { grid-area: 2 / 1; border-radius: 14px 7px 7px 14px; }
 .pause { grid-area: 2 / 2; border-radius: 10px; background: var(--panneau-creux) !important; color: var(--accent-fonce) !important; font-weight: 900; }
@@ -220,7 +234,7 @@ kbd { padding: 2px 5px; border: 1px solid var(--bord-vif); border-bottom-width: 
     .app { gap: 4px; }
     .topbar { min-height: 38px; }
     .icon-button { width: 37px; height: 37px; }
-    .dpad { grid-template: repeat(3, 44px) / repeat(3, 44px); }
+    .dpad { --dpad-cell: clamp(58px, 16vw, 64px); }
     .hud-boite { padding-block: 3px 4px; }
     .nouvelle { min-height: 34px; }
 }
@@ -243,7 +257,7 @@ kbd { padding: 2px 5px; border: 1px solid var(--bord-vif); border-bottom-width: 
     :root[data-main="gauche"] .zone-jeu { grid-column: 2; }
     :root[data-main="gauche"] .topbar, :root[data-main="gauche"] .hud, :root[data-main="gauche"] .commandes { grid-column: 1; }
     :root[data-main="gauche"] .app { grid-template-columns: minmax(188px, 31vw) minmax(0, 1fr); }
-    .dpad { grid-template: repeat(3, min(48px, 12dvh)) / repeat(3, min(48px, 12dvh)); }
+    .dpad { --dpad-cell: clamp(56px, 15dvh, 68px); }
     .nouvelle { min-height: 36px; }
 }
 

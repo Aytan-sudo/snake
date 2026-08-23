@@ -6,11 +6,15 @@
     align-items: center;
     justify-content: center;
     gap: 5px;
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .cadre-plateau {
     position: relative;
-    width: min(calc(100vw - 24px), calc(100dvh - 276px), 620px);
+    width: min(calc(100vw - 24px), calc(100dvh - 320px), 620px);
     max-width: 100%;
     aspect-ratio: 1;
     overflow: hidden;
@@ -26,6 +30,10 @@
     display: block;
     width: 100%;
     height: 100%;
+    touch-action: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
 }
 
 .voile-jeu {
@@ -76,5 +84,5 @@
 }
 
 @media (orientation: portrait) and (max-height: 720px) {
-    .cadre-plateau { width: min(calc(100vw - 24px), calc(100dvh - 292px), 620px); }
+    .cadre-plateau { width: min(calc(100vw - 24px), calc(100dvh - 338px), 620px); }
 }
