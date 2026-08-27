@@ -7,6 +7,11 @@ directs et une partie qui se remet en pause quand l'application disparaît.
 Le jeu est une page statique, sans dépendance et sans compilation. Il fonctionne
 hors ligne après la première visite et ne transmet aucune donnée.
 
+## Version 1.0.2
+
+- les cibles tactiles de l'interface passent à 44 px (boutons d'en-tête,
+  boutons texte, listes déroulantes), conformément à la convention.
+
 ## Version 1.0.1
 
 - flèches tactiles agrandies sur téléphone, y compris les petits écrans ;

@@ -54,8 +54,8 @@ button {
 
 .icon-button {
     display: grid;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
     place-items: center;
     padding: 0;
     border: 1px solid var(--bord);
@@ -146,7 +146,7 @@ button {
 .button:active { transform: translateY(1px); }
 .button-primary { border-color: var(--accent); background: var(--accent); color: var(--accent-texte); }
 .button-danger { border-color: color-mix(in srgb, var(--danger) 45%, var(--bord)); background: var(--danger-fond); color: var(--danger); }
-.nouvelle { min-height: 38px; padding-block: 6px; font-size: .82rem; }
+.nouvelle { min-height: 44px; padding-block: 6px; font-size: .82rem; }
 
 .dialog {
     width: min(calc(100% - 24px), 470px);
@@ -233,10 +233,10 @@ kbd { padding: 2px 5px; border: 1px solid var(--bord-vif); border-bottom-width: 
 @media (max-height: 720px) and (orientation: portrait) {
     .app { gap: 4px; }
     .topbar { min-height: 38px; }
-    .icon-button { width: 37px; height: 37px; }
+    .icon-button { width: 44px; height: 44px; }
     .dpad { --dpad-cell: clamp(58px, 16vw, 64px); }
     .hud-boite { padding-block: 3px 4px; }
-    .nouvelle { min-height: 34px; }
+    .nouvelle { min-height: 44px; }
 }
 
 @media (orientation: landscape) and (max-height: 620px) {
@@ -248,7 +248,7 @@ kbd { padding: 2px 5px; border: 1px solid var(--bord-vif); border-bottom-width: 
     .zone-jeu { grid-column: 1; grid-row: 1 / 4; position: relative; }
     .topbar { grid-column: 2; grid-row: 1; width: 100%; }
     .topbar h1 { font-size: 1.45rem; }
-    .topbar .icon-button { width: 36px; height: 36px; }
+    .topbar .icon-button { width: 44px; height: 44px; }
     .mini-serpent { display: none; }
     .hud { grid-column: 2; grid-row: 2; width: 100%; grid-template-columns: repeat(2, 1fr); }
     .hud:has(#boite-temps:not([hidden])) { grid-template-columns: repeat(2, 1fr); }
