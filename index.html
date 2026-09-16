@@ -12,11 +12,17 @@
 <link rel="stylesheet" href="css/themes.css">
 <link rel="stylesheet" href="css/plateau.css">
 <link rel="stylesheet" href="css/interface.css">
+<link rel="stylesheet" href="commun/passeport.css">
+<script src="commun/passeport.js"></script>
+<script src="commun/liaison.js" defer></script>
 <script>
     // Restaurer l'apparence avant le premier rendu évite un éclair vert quand
     // le joueur a choisi un thème sombre.
     try {
-        const enveloppe = JSON.parse(localStorage.getItem('snake.preferences') || '{}');
+        // Avec un passeport, les réglages sont ceux du joueur ; en mode invité,
+        // ceux de l'appareil, comme avant.
+        const magasin = globalThis.Passeport?.stockageJeu('snake') || localStorage;
+        const enveloppe = JSON.parse(magasin.getItem('snake.preferences') || '{}');
         const prefs = enveloppe && enveloppe.schema === 1 ? enveloppe.donnees || {} : {};
         if (/^(prairie|ocean|bonbon|ardoise|neon|contraste)$/.test(prefs.theme || '')) {
             document.documentElement.dataset.theme = prefs.theme;
@@ -33,6 +39,8 @@
 <body>
 
 <div class="app">
+    <div class="passeport-ruban" data-passeport-ruban data-jeu="snake"
+         data-consigne="Tampon : un record battu ou 20 fruits"></div>
     <header class="topbar">
         <div class="titre">
             <span class="mini-serpent" aria-hidden="true">●●●</span>
@@ -155,7 +163,7 @@
     <ol class="historique" id="historique"></ol>
 
     <p class="changement" id="avis-changement" hidden>Le nouveau mode ou la nouvelle vitesse sera appliqué en lançant une nouvelle partie.</p>
-    <p class="version" id="version">Snake 1.0.3</p>
+    <p class="version" id="version">Snake 1.1.0</p>
     <div class="dialog-actions">
         <button type="button" class="button button-danger" id="effacer-resultats">Effacer les résultats</button>
         <button type="button" class="button button-primary" data-fermer>Jouer</button>

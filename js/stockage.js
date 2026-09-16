@@ -20,6 +20,10 @@ export const PREFERENCES_PAR_DEFAUT = {
 
 function obtenirCoffre() {
     if (coffre) return coffre;
+    // Ouvert depuis le hub avec un passeport, le jeu range tout dans l'espace
+    // du joueur ; en mode invité, dans le localStorage, comme avant.
+    const passeport = globalThis.Passeport?.stockageJeu('snake');
+    if (passeport) { coffre = passeport; return coffre; }
     try {
         const sonde = `${PREFIXE}sonde`;
         globalThis.localStorage.setItem(sonde, '1');
@@ -117,3 +121,18 @@ export function effacerResultats() {
 export const enregistrerSession = partie => ecrire('session', partie);
 export const chargerSession = () => lire('session', null);
 export const oublierSession = () => oublier('session');
+
+// ------------------------------------------------------------- le passeport
+//
+// Les fruits mangés dans la journée, pour le tampon à l'effort. Le compte ne
+// vit que dans l'espace d'un joueur : en mode invité, rien n'est compté ni
+// écrit, et le stockage du jeu reste ce qu'il était avant le raccordement.
+
+export function compterFruitPasseport(jour, espace = globalThis.Passeport?.stockageJeu('snake') ?? null) {
+    if (!espace) return null;
+    let compte = null;
+    try { compte = JSON.parse(espace.getItem('snake.passeport')); } catch { /* illisible : on repart */ }
+    const fruits = compte?.jour === jour && Number.isInteger(compte.fruits) ? compte.fruits + 1 : 1;
+    try { espace.setItem('snake.passeport', JSON.stringify({ jour, fruits })); } catch { /* le passeport signale l'échec */ }
+    return fruits;
+}

@@ -7,6 +7,18 @@ directs et une partie qui se remet en pause quand l'application disparaît.
 Le jeu est une page statique, sans dépendance et sans compilation. Il fonctionne
 hors ligne après la première visite et ne transmet aucune donnée.
 
+## Version 1.1.0 — Le passeport commun
+
+Ouvert depuis le hub avec un passeport, le jeu range préférences, records,
+historique et partie en cours dans l’espace du joueur ; en mode invité, rien ne
+change. Un bandeau rappelle le profil et la consigne du jour.
+
+Snake est le premier jeu du thème **Aventure**, qui ne sortait jamais en mission
+faute de jeu raccordé. Le tampon récompense l’effort ou la réussite, au premier
+des deux : un record battu dans la variante et la vitesse en cours le donne tout
+de suite ; sinon, c’est le vingtième fruit mangé dans la journée, toutes parties
+confondues.
+
 ## Version 1.0.3
 
 - **la carte d'accueil tient dans le plateau, même sur un iPhone SE.** Safari

@@ -10,7 +10,8 @@ globalThis.localStorage = {
 const {
     PREFERENCES_PAR_DEFAUT, chargerHistorique, chargerPreferences, chargerRecords,
     chargerSession, cleRecord, effacerResultats, enregistrerPreferences,
-    enregistrerResultat, enregistrerSession, oublierSession, recordDe
+    enregistrerResultat, enregistrerSession, oublierSession, recordDe,
+    compterFruitPasseport
 } = await import('../js/stockage.js');
 
 const { check, rapport } = compteur();
@@ -52,5 +53,28 @@ check('un stockage corrompu retombe sur les défauts', chargerPreferences().them
 
 effacerResultats();
 check('effacer vide records et historique', Object.keys(chargerRecords()).length === 0 && chargerHistorique().length === 0);
+
+// ------------------------------------------------------------- le passeport
+//
+// Le compteur de fruits ne vit que dans l'espace d'un joueur. En mode invité il
+// rend `null` et n'écrit rien : sans passeport, le stockage du jeu doit rester
+// exactement ce qu'il était avant le raccordement.
+
+check('en mode invité, rien n\'est compté', compterFruitPasseport('2026-09-16') === null);
+check('et rien n\'est écrit dans le localStorage', !memoire.has('snake.passeport'));
+
+const espace = new Map();
+const profil = {
+    getItem: cle => espace.get(cle) ?? null,
+    setItem: (cle, valeur) => espace.set(cle, String(valeur)),
+    removeItem: cle => espace.delete(cle)
+};
+check('le premier fruit du jour compte pour un', compterFruitPasseport('2026-09-16', profil) === 1);
+for (let i = 2; i <= 20; i++) compterFruitPasseport('2026-09-16', profil);
+check('le vingtième fruit est bien le vingtième', JSON.parse(espace.get('snake.passeport')).fruits === 20);
+check('le lendemain repart de un', compterFruitPasseport('2026-09-17', profil) === 1);
+
+espace.set('snake.passeport', '{ abîmé');
+check('un compteur illisible repart de un', compterFruitPasseport('2026-09-17', profil) === 1);
 
 rapport();

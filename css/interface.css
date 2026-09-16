@@ -30,14 +30,16 @@ button {
 
 .app {
     display: grid;
-    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    /* Le bandeau du passeport prend sa propre rangée : la zone de jeu, seule
+       rangée souple, lui rend ses 44 px au lieu de déborder de l'écran. */
+    grid-template-rows: auto auto auto minmax(0, 1fr) auto;
     gap: 7px;
     width: 100%;
     height: 100dvh;
     padding: max(8px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(8px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
 }
 
-.topbar, .hud, .commandes { width: min(100%, 620px); margin-inline: auto; }
+.topbar, .hud, .commandes, .passeport-ruban { width: min(100%, 620px); margin-inline: auto; }
 
 .topbar {
     display: flex;

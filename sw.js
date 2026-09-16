@@ -1,10 +1,13 @@
 // Coquille PWA, réseau d'abord et cache en secours. Le numéro suit exactement
 // la version visible dans les options et celle de package.json.
 
-const VERSION = 'snake-1.0.3';
+const VERSION = 'snake-1.1.0';
 const COQUILLE = [
     './',
     'index.html',
+    'commun/passeport.js',
+    'commun/liaison.js',
+    'commun/passeport.css',
     'manifest.webmanifest',
     'css/interface.css',
     'css/plateau.css',

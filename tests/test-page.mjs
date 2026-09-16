@@ -67,7 +67,18 @@ check('le manifeste autorise portrait et paysage', manifeste.orientation === 'an
 check('le manifeste possède nom et description', manifeste.name === 'Snake' && manifeste.description.length > 50);
 check('les icônes PNG et SVG sont déclarées', manifeste.icons.length === 3 && manifeste.icons.every(icone => existsSync(join(racine, icone.src))));
 check('page et manifeste partagent la couleur initiale', page.includes(`content="${manifeste.theme_color}"`));
-check('le thème initial lit la clé versionnée du stockage', page.includes("localStorage.getItem('snake.preferences')"));
+// Avec un passeport, le magasin est celui du joueur ; sans, le localStorage.
+// Les deux chemins doivent viser la clé versionnée du module de stockage.
+check('le thème initial lit la clé versionnée du stockage',
+    page.includes("getItem('snake.preferences')") && page.includes("Passeport?.stockageJeu('snake')"));
+
+// Le bandeau du passeport annonce le jeu au module commun : sans `data-jeu`,
+// il s'affiche mais aucun tampon ne peut être attribué.
+check('la page porte le bandeau du passeport',
+    page.includes('data-passeport-ruban data-jeu="snake"')
+    && page.includes('commun/passeport.js') && page.includes('commun/liaison.js'));
+check('le module commun est disponible hors ligne',
+    ['passeport.js', 'liaison.js', 'passeport.css'].every(nom => coquille.includes(`commun/${nom}`)));
 
 check('le déploiement Pages existe', existsSync(join(racine, '.github/workflows/pages.yml')) && lire('.github/workflows/pages.yml').includes('actions/deploy-pages@v4'));
 

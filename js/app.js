@@ -5,7 +5,8 @@ import { creerRendu } from './rendu.js';
 import { creerSon } from './son.js';
 import {
     PREFERENCES_PAR_DEFAUT, chargerPreferences, chargerSession, effacerResultats,
-    enregistrerPreferences, enregistrerResultat, enregistrerSession, oublierSession
+    enregistrerPreferences, enregistrerResultat, enregistrerSession, oublierSession,
+    compterFruitPasseport
 } from './stockage.js';
 import { APPARENCES, IDS_APPARENCES, IDS_THEMES, appliquerTheme, themeSuivant } from './themes.js';
 import { IDS_VARIANTES } from './variantes.js';
@@ -59,12 +60,24 @@ function sauvegarder() {
     else enregistrerSession(etat);
 }
 
+// Le tampon du passeport : un record battu le donne tout de suite ; sinon,
+// c'est le vingtième fruit de la journée, toutes parties confondues. En mode
+// invité, rien n'est compté ni écrit.
+function noterPasseport({ fruit = false, reussite = false } = {}) {
+    const joueur = globalThis.Passeport;
+    if (!joueur?.profilId) return;
+    const fruits = fruit ? compterFruitPasseport(joueur.jourLocal()) : 0;
+    if (fruits !== null) joueur.noter('snake', fruits, reussite);
+}
+
 function finaliser() {
     if (resultatEnregistre || etat.statut !== 'terminee') return;
     resultatEnregistre = true;
     const bilan = enregistrerResultat(etat);
     oublierSession();
     if (bilan.nouveauRecord) {
+        // Un record battu vaut le tampon, même sur la première partie du jour.
+        noterPasseport({ reussite: true });
         son.record();
         vibrer([35, 45, 35, 45, 80]);
     } else {
@@ -79,6 +92,7 @@ function finaliser() {
 function traiter(evenements) {
     for (const evenement of evenements) {
         if (evenement.type === 'mange') {
+            noterPasseport({ fruit: true });   // un fruit avalé, pas une simple présence
             son.manger(evenement.score);
             vibrer(20);
             annoncer(`Fruit ${evenement.score}`);
