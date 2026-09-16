@@ -7,6 +7,18 @@ directs et une partie qui se remet en pause quand l'application disparaît.
 Le jeu est une page statique, sans dépendance et sans compilation. Il fonctionne
 hors ligne après la première visite et ne transmet aucune donnée.
 
+## Version 1.0.3
+
+- **la carte d'accueil tient dans le plateau, même sur un iPhone SE.** Safari
+  d'iOS 26 ne laisse que 549 px de haut sur ce téléphone : le plateau y tombe à
+  211 px de côté et la carte « À vous de jouer », réglée sur la fenêtre, se
+  faisait couper par le cadre. Le cadre devient un conteneur de mesure
+  (`container: plateau / size`) et, sous 280 px, la carte réduit ses marges et
+  sa typographie.
+
+  Aucun contrôle ne le signalait : la page ne débordait pas et ne levait aucune
+  erreur. C'est la capture du simulateur iOS qui l'a montré.
+
 ## Version 1.0.2
 
 - les cibles tactiles de l'interface passent à 44 px (boutons d'en-tête,
