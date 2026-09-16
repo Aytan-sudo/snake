@@ -14,6 +14,9 @@
 
 .cadre-plateau {
     position: relative;
+    /* Conteneur de mesure : sur un petit écran le plateau descend à ~210 px de
+       côté, et la carte d'accueil doit se régler sur lui, pas sur la fenêtre. */
+    container: plateau / size;
     width: min(calc(100vw - 24px), calc(100dvh - 320px), 620px);
     max-width: 100%;
     aspect-ratio: 1;
@@ -63,6 +66,16 @@
 .voile-carte h2 { margin: 2px 0 8px; font-size: clamp(1.35rem, 5vw, 1.8rem); }
 .voile-carte p { margin: 0 0 14px; color: var(--attenue); line-height: 1.42; }
 .voile-carte .voile-surtitre { margin-bottom: 2px; color: var(--accent); font-weight: 800; font-size: .75rem; letter-spacing: .09em; text-transform: uppercase; }
+
+/* iPhone SE dans Safari d'iOS : 549 px de haut, donc un plateau de 211 px où
+   la carte débordait et se faisait couper par le cadre. */
+@container plateau (max-height: 280px) {
+    .voile-jeu { padding: 8px; }
+    .voile-carte { padding: 12px 14px; border-radius: 14px; }
+    .voile-carte h2 { margin: 0 0 4px; font-size: 1.1rem; }
+    .voile-carte p { margin: 0 0 8px; font-size: .8rem; line-height: 1.3; }
+    .voile-carte .voile-surtitre { font-size: .62rem; }
+}
 
 .annonce {
     min-height: 1.2em;
