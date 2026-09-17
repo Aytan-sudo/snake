@@ -1,4 +1,4 @@
-export const VERSION = '1.1.1';
+export const VERSION = '1.1.2';
 export const VERSION_SCHEMA = 1;
 export const TAILLE_GRILLE = 20;
 export const DUREE_SPRINT_MS = 90_000;
